@@ -40,25 +40,31 @@ function Calculadora() {
 
         this.memoria.push(resultado);
         console.log(this.memoria);
+    }
 
-        this.mostrarResultados = function() {
-            let elegirResultado = prompt("Cual resultado quiere ver? Escriba un numero o la palabra (todos) para que se muestren todos los resultados. Ej: 1 (muestra el primer resultado)");
+    this.mostrarResultados = function() {
+        let elegirResultado = prompt("¿Qué resultado quiere ver? Escriba un numero o la palabra (todos) para que se muestren todos los resultados. Ej: 1 (muestra el primer resultado)");
 
-            if(elegirResultado == "todos") {
-                alert("El resultadoi de todas las cuentas son: " + this.memoria);
-            }
-            else {
-                alert("El resultado de la cuenta seleccionada es: " + this.memoria[elegirResultado - 1]);
+        if (elegirResultado.toLowerCase() === "todos") {
+            this.memoria.forEach(function(resultado, index) {
+                alert(`Resultado ${index + 1}: ${resultado}`);
+            });
+        } else {
+            let index = parseInt(elegirResultado);
+            if (!isNaN(index) && index >= 1 && index <= this.memoria.length) {
+                alert(`El resultado de la cuenta seleccionada es: ${this.memoria[index - 1]}`);
+            } else {
+                alert("Opción no válida");
             }
         }
     }
 
     this.filtrar = function() {
-        let tipoFiltro = prompt("Qué tipo de filtro quiere utilizar? Escriba 'menor' o 'mayor':");
-        let filtro = parseFloat(prompt(`Ingrese el valor para el filtro ${tipoFiltro} que:`));
-    
+        let tipoFiltro = prompt("¿Qué tipo de filtro quiere utilizar? Escriba 'menor' o 'mayor':");
+        let filtro = parseFloat(prompt(`Ingrese el valor para el filtro ${tipoFiltro}:`));
+
         let resultadosFiltrados;
-    
+
         if (tipoFiltro === "menor") {
             resultadosFiltrados = this.memoria.filter(function(resultado) {
                 return resultado < filtro;
@@ -71,13 +77,13 @@ function Calculadora() {
             alert("Tipo de filtro no válido. Por favor, ingrese 'menor' o 'mayor'.");
             return;
         }
-    
+
         if (resultadosFiltrados.length > 0) {
             alert(`Resultados ${tipoFiltro}es a ${filtro}: ${resultadosFiltrados}`);
         } else {
             alert(`No hay resultados ${tipoFiltro}es a ${filtro}`);
         }
-    }    
+    }
 
     this.otrasOperaciones = function() {
         let otraOperacion = prompt("1) Desea realizar otra operación matemática? Escriba si o no.\n2) Si desea ver los resultados de las operaciones realizadas escriba resultados.\n3) Si desea filtrar resultados escriba la palabra filtrar");
