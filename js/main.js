@@ -1,41 +1,113 @@
-function calculadora() {
-    let elegirOperacion;
+function Calculadora() {
+    this.elegirOperacion = "";
+    this.memoria = [];
 
-    do {
-        elegirOperacion = prompt("Ingrese alguna de las siguientes opciones (+, -, *, o /) para realizar una operación matemática:");
-    } while (elegirOperacion !== "+" && elegirOperacion !== "-" && elegirOperacion !== "*" && elegirOperacion !== "/");
-
-    let num1 = parseFloat(prompt("Ingrese el primer número:"));
-    let num2 = parseFloat(prompt("Ingrese el segundo número:"));
-
-    let resultado;
-
-    if (elegirOperacion == "+") {
-        resultado = num1 + num2;
-        alert("El resultado de la suma es: " + resultado);
-    } else if (elegirOperacion == "-") {
-        resultado = num1 - num2;
-        alert("El resultado de la resta es: " + resultado);
-    } else if (elegirOperacion == "*") {
-        resultado = num1 * num2;
-        alert("El resultado de la multiplicación es: " + resultado);
-    } else if (elegirOperacion == "/") {
-        resultado = num1 / num2;
-        alert("El resultado de la división es: " + resultado);
-    }
-
-    let otraOperacion = prompt("Desea realizar otra operación matemática? Escriba si o no");
-
-    if(otraOperacion == "si") {
-        calculadora();
-    }
-    else if(otraOperacion == "no") {
-        alert("Gracias por usar la calculadora");
-    } else {
+    this.obtenerOperacion = function() {
         do {
-            otraOperacion = prompt("Desea realizar otra operación matemática? Escriba si o no");
-        } while(otraOperacion !== "si" && otraOperacion !== "no")
+            this.elegirOperacion = prompt("Ingrese alguna de las siguientes opciones (+, -, *, o /) para realizar una operación matemática:");
+        } while (this.elegirOperacion !== "+" && this.elegirOperacion !== "-" && this.elegirOperacion !== "*" && this.elegirOperacion !== "/");
+    }
+
+    this.numeros = function() {
+        this.num1 = parseFloat(prompt("Ingrese el primer número:"));
+        this.num2 = parseFloat(prompt("Ingrese el segundo número:"));        
+    }
+
+    this.resultados = function() {
+        let resultado;
+
+        switch(this.elegirOperacion) {
+            case "+":
+                resultado = this.num1 + this.num2;
+                alert("El resultado de la suma es: " + resultado);
+                break;
+                
+            case "-":
+                resultado = this.num1 - this.num2;
+                alert("El resultado de la resta es: " + resultado);
+                break;
+
+            case "*":
+                resultado = this.num1 * this.num2;
+                alert("El resultado de la multiplicación es: " + resultado);
+                break;
+
+            case "/":
+                resultado = this.num1 / this.num2;
+                alert("El resultado de la división es: " + resultado);
+                break;
+        }
+
+        this.memoria.push(resultado);
+        console.log(this.memoria);
+
+        this.mostrarResultados = function() {
+            let elegirResultado = prompt("Cual resultado quiere ver? Escriba un numero o la palabra (todos) para que se muestren todos los resultados. Ej: 1 (muestra el primer resultado)");
+
+            if(elegirResultado == "todos") {
+                alert("El resultadoi de todas las cuentas son: " + this.memoria);
+            }
+            else {
+                alert("El resultado de la cuenta seleccionada es: " + this.memoria[elegirResultado - 1]);
+            }
+        }
+    }
+
+    this.filtrar = function() {
+        let tipoFiltro = prompt("Qué tipo de filtro quiere utilizar? Escriba 'menor' o 'mayor':");
+        let filtro = parseFloat(prompt(`Ingrese el valor para el filtro ${tipoFiltro} que:`));
+    
+        let resultadosFiltrados;
+    
+        if (tipoFiltro === "menor") {
+            resultadosFiltrados = this.memoria.filter(function(resultado) {
+                return resultado < filtro;
+            });
+        } else if (tipoFiltro === "mayor") {
+            resultadosFiltrados = this.memoria.filter(function(resultado) {
+                return resultado > filtro;
+            });
+        } else {
+            alert("Tipo de filtro no válido. Por favor, ingrese 'menor' o 'mayor'.");
+            return;
+        }
+    
+        if (resultadosFiltrados.length > 0) {
+            alert(`Resultados ${tipoFiltro}es a ${filtro}: ${resultadosFiltrados}`);
+        } else {
+            alert(`No hay resultados ${tipoFiltro}es a ${filtro}`);
+        }
+    }    
+
+    this.otrasOperaciones = function() {
+        let otraOperacion = prompt("1) Desea realizar otra operación matemática? Escriba si o no.\n2) Si desea ver los resultados de las operaciones realizadas escriba resultados.\n3) Si desea filtrar resultados escriba la palabra filtrar");
+        let textoMinusculas = otraOperacion.toLowerCase();
+    
+        if (textoMinusculas == "si") {
+            this.ejecutarCalculadora();
+        } else if (textoMinusculas == "no") {
+            alert("Gracias por usar la calculadora");
+        } else if (textoMinusculas == "resultados") {
+            this.mostrarResultados();
+            this.otrasOperaciones();
+        } else if (textoMinusculas == "filtrar") {
+            this.filtrar();
+            this.otrasOperaciones();
+        } else {
+            do {
+                otraOperacion = prompt("1) Desea realizar otra operación matemática? Escriba si o no.\n2) Si desea ver los resultados de las operaciones realizadas escriba resultados.\n3) Si desea filtrar resultados escriba la palabra filtrar");
+            } while (otraOperacion !== "si" && otraOperacion !== "no");
+            this.otrasOperaciones();
+        }
+    }
+    
+    this.ejecutarCalculadora = function() {
+        this.obtenerOperacion();
+        this.numeros();
+        this.resultados();
+        this.otrasOperaciones();
     }
 }
 
-calculadora();
+const miCalculadora = new Calculadora();
+miCalculadora.ejecutarCalculadora();
