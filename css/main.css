@@ -84,6 +84,8 @@ label {
 
 .resultado {
     font-size: 24px;
+    background-color: #E03320;
+    color: #FFFFFF;
 }
 
 #memoriaList {
@@ -97,4 +99,17 @@ label {
 
 #btnLimpiarMemoria:hover {
     background-color: #409AAC;
+}
+
+/* Tu código CSS existente permanece sin cambios */
+
+/* Agregar estilos para los nuevos botones */
+.containerBtn {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+}
+
+.containerBtn button {
+    grid-column: span 1;
 }

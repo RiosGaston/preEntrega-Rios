@@ -5,30 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/main.css">
     <title>Calculadora</title>
+    <!-- Agrega el CDN de math.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.2.0/math.js"></script>
 </head>
 <body>
     <h1 class="tituloPrincipal">Calculadora</h1>
     <div class="containerCalculadora">
         <div class="containerInput">
-            <label for="num1">Ingrese el primer número</label>
-            <input type="number" class="inputNum" id="num1">
-            <label for="num2">Ingrese el segundo número</label>
-            <input type="number" class="inputNum" id="num2">
-        </div>
-        <section class="sectionBtn">
-            <div class="containerBtn">
-                <button class="btn" id="btnSumar">Sumar</button>
-                <button class="btn" id="btnRestar">Restar</button>
-                <button class="btn" id="btnMultiplicar">Multiplicar</button>
-                <button class="btn" id="btnDividir">Dividir</button>
-            </div>
-        </section>
-
-        <div class="containerResultado">
-            <h2>Resultado</h2>
+            <label for="display">Display</label>
             <p class="resultado" id="resultado"></p>
         </div>
         
+        <section class="sectionBtn">
+            <div class="containerBtn">
+                <!-- Botones del pad numérico -->
+                <button class="btn" id="btn7">7</button>
+                <button class="btn" id="btn8">8</button>
+                <button class="btn" id="btn9">9</button>
+                <button class="btn" id="btnSum">+</button>
+
+                <button class="btn" id="btn4">4</button>
+                <button class="btn" id="btn5">5</button>
+                <button class="btn" id="btn6">6</button>
+                <button class="btn" id="btnSubtract">-</button>
+
+                <button class="btn" id="btn1">1</button>
+                <button class="btn" id="btn2">2</button>
+                <button class="btn" id="btn3">3</button>
+                <button class="btn" id="btnMultiply">*</button>
+
+                <button class="btn" id="btnDot">.</button>
+                <button class="btn" id="btn0">0</button>
+                <button class="btn" id="btnEqual">=</button>
+                <button class="btn" id="btnDivide">/</button>
+
+                <!-- Nuevos botones -->
+                <button class="btn" id="btnBackspace">Backspace</button>
+                <button class="btn" id="btnClear">C</button>
+                <!-- Nuevos botones para funciones trigonométricas -->
+                <button class="btn" id="btnSin">sin</button>
+                <button class="btn" id="btnCos">cos</button>
+                <button class="btn" id="btnTan">tan</button>
+                <!-- Nuevos botones para paréntesis -->
+                <button class="btn" id="btnOpenParenthesis">(</button>
+                <button class="btn" id="btnCloseParenthesis">)</button>
+            </div>
+        </section>
+
         <div class="containerMemoria">
             <h2 id="memoriaTitle">Memoria</h2>
             <ul id="memoriaList"></ul>
@@ -36,6 +59,15 @@
         
         <button class="btn" id="btnLimpiarMemoria">Limpiar Memoria</button>
     </div>
+
+    <!-- Nueva sección para la Numbers API -->
+    <section class="sectionNumbersApi">
+        <label for="inputNumero">Número: </label>
+        <input type="text" id="inputNumero" placeholder="Ingrese un número">
+        <button class="btn" id="btnRandomTrivia">Número Trivial Aleatorio</button>
+        <button class="btn" id="btnGetTrivia">Obtener Curiosidades</button>
+        <button class="btn" id="btnMathFact">Hecho Matemático del Día</button>
+    </section>
 
     <script src="js/main.js"></script>
 </body>
