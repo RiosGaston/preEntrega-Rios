@@ -101,9 +101,6 @@ label {
     background-color: #409AAC;
 }
 
-/* Tu código CSS existente permanece sin cambios */
-
-/* Agregar estilos para los nuevos botones */
 .containerBtn {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -112,4 +109,94 @@ label {
 
 .containerBtn button {
     grid-column: span 1;
+}
+
+.containerBtn {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+}
+
+.containerBtn button {
+    grid-column: span 1;
+}
+
+.containerBtn button#btnSum {
+    background-color: #1bb17f;
+}
+
+.containerBtn button#btnSubtract {
+    background-color: #1bb17f;
+}
+
+.containerBtn button#btnMultiply {
+    background-color: #1bb17f;
+}
+
+.containerBtn button#btnDivide {
+    background-color: #1bb17f;
+}
+
+.containerBtn button#btnEqual {
+    background-color: #1bb17f;
+}
+
+.sectionTrivia {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.sectionTrivia {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.containerTrivia {
+    color: #DDC6C1;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.btnGetTrivia {
+    background-color: #020c13;
+    color: #DDC6C1;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 300px;
+    margin-bottom: 30px;
+}
+
+.trivia {
+    margin-top: 20px;
+}
+
+.trivia-question {
+    font-weight: bold;
+    background-color: #409AAC;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.trivia-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.trivia-options li {
+    list-style: none;
+    margin: 5px 0;
+    background-color: #409AAC;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.respuesta {
+    margin-top: 20px;
+    font-weight: bold;
 }

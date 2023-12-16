@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
         this.displayValue = "";
 
         this.actualizarDisplay = function () {
-            document.getElementById("resultado").textContent = this.displayValue;
+            document.getElementById("resultado").innerHTML = this.displayValue;
         }
 
         this.agregarAlDisplay = function (valor) {
@@ -35,8 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         this.resultados = function (resultado, operacion) {
             let resultadoElement = document.getElementById("resultado");
-            resultadoElement.textContent = resultado !== undefined ? `Resultado: ${resultado}` : "Error: Debe ingresar una expresión válida";
-            this.displayValue = resultado !== undefined ? resultado.toString() : ""; // Actualizar el valor del display
+            resultadoElement.innerHTML = resultado !== undefined ? `Resultado: ${resultado}` : "Error: Debe ingresar una expresión válida";
+            this.displayValue = resultado !== undefined ? resultado.toString() : "";
             this.actualizarDisplay();
         }
 
@@ -52,7 +52,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         this.validarExpresion = function () {
-            // Puedes agregar tu lógica de validación aquí si es necesario
             return true;
         }
 
@@ -62,15 +61,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     try {
                         let resultado;
                         if (this.displayValue.includes("sin") || this.displayValue.includes("cos") || this.displayValue.includes("tan")) {
-                            // Si se detecta alguna de las funciones trigonométricas, evaluar con math.js
                             resultado = math.evaluate(this.displayValue);
                         } else {
-                            // De lo contrario, utilizar eval para otras operaciones
                             resultado = eval(this.displayValue);
                         }
 
                         this.memoria.push(`${this.displayValue} = ${resultado}`);
-                        this.resultados(resultado, operacion); // Utilizar la función resultados actualizada
+                        this.resultados(resultado, operacion);
                         this.mostrarMemoria();
                         this.guardarMemoriaEnLocalStorage();
                     } catch (error) {
@@ -88,52 +85,55 @@ document.addEventListener("DOMContentLoaded", function () {
         this.guardarMemoriaEnLocalStorage = function () {
             localStorage.setItem('calculadora_memoria', JSON.stringify(this.memoria));
         }
+
+        this.mostrarTrivia = function (pregunta, respuestas) {
+            const triviaContainer = document.getElementById("trivia");
+            const respuestaContainer = document.getElementById("respuesta");
+            
+            respuestaContainer.innerHTML = "";
+
+            triviaContainer.innerHTML = `
+                <p>Pregunta: ${pregunta}</p>
+                <ul>
+                    ${respuestas.map((respuesta, index) => `<li key=${index}>${respuesta}</li>`).join("")}
+                </ul>
+                <button class="btn" id="btnMostrarRespuesta">Mostrar Respuesta</button>
+            `;
+            
+            document.getElementById("btnMostrarRespuesta").addEventListener("click", () => {
+                this.mostrarRespuesta(respuestas);
+            });
+        };
+
+        this.mostrarRespuesta = function (respuestas) {
+            const respuestaContainer = document.getElementById("respuesta");
+            const respuestaCorrecta = respuestas[respuestas.length - 1];
+            respuestaContainer.innerHTML = `Respuesta Correcta: ${respuestaCorrecta}`;
+        };
+
+        this.obtenerTrivia = function () {
+            const apiUrl = "https://opentdb.com/api.php?amount=10&category=19";
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const pregunta = data.results[0].question;
+                    const respuestas = [...data.results[0].incorrect_answers, data.results[0].correct_answer];
+                    this.mostrarTrivia(pregunta, respuestas);
+                })
+                .catch(error => {
+                    console.error("Error fetching trivia:", error);
+                    document.getElementById("trivia").textContent = "Error al obtener la trivia.";
+                });
+        };
     }
 
     const miCalculadora = new Calculadora();
-
-    document.addEventListener("keydown", function (event) {
-        const keyPressed = event.key;
-    
-        switch (keyPressed) {
-            case "=":
-            case "Enter":  // Agregamos "Enter" como un caso adicional
-                miCalculadora.ejecutarCalculadora("=");
-                break;
-            case "Backspace":
-                miCalculadora.borrarUltimoCaracter();
-                break;
-            case "c":
-            case "C":
-                miCalculadora.limpiarDisplay();
-                break;
-            case "+":
-            case "-":
-            case "*":
-            case "/":
-                miCalculadora.agregarAlDisplay(` ${keyPressed} `);
-                break;
-            case ".":
-                miCalculadora.agregarAlDisplay(keyPressed);
-                break;
-            case "0":
-            case "1":
-            case "2":
-            case "3":
-            case "4":
-            case "5":
-            case "6":
-            case "7":
-            case "8":
-            case "9":
-                miCalculadora.agregarAlDisplay(keyPressed);
-                break;
-            case "(":
-            case ")":
-                miCalculadora.agregarAlDisplay(keyPressed);
-                break;
-        }
-    });
 
     document.querySelectorAll(".btn").forEach(function (button) {
         button.addEventListener("click", function () {
@@ -158,8 +158,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 case ")":
                     miCalculadora.agregarAlDisplay(buttonValue);
                     break;
-                case "Número Trivial Aleatorio":
-                    getTrivia(); // Llamamos a la función para obtener un número trivial aleatorio
+                case "Obtener Curiosidades":
+                    miCalculadora.obtenerTrivia();
                     break;
                 default:
                     miCalculadora.agregarAlDisplay(buttonValue);
@@ -168,38 +168,48 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // Agregar event listener para eventos de teclado
+    document.addEventListener("keydown", function (event) {
+        const key = event.key;
+
+        switch (key) {
+            case "Enter":
+                miCalculadora.ejecutarCalculadora("=");
+                break;
+            case "Backspace":
+                miCalculadora.borrarUltimoCaracter();
+                break;
+            case "Escape":
+                miCalculadora.limpiarDisplay();
+                break;
+            case "0":
+            case "1":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+            case "6":
+            case "7":
+            case "8":
+            case "9":
+            case ".":
+            case "+":
+            case "-":
+            case "*":
+            case "/":
+            case "(":
+            case ")":
+                miCalculadora.agregarAlDisplay(key);
+                break;
+            default:
+                break;
+        }
+    });
+
     document.getElementById("btnLimpiarMemoria").addEventListener("click", function () {
         miCalculadora.limpiarMemoria();
         miCalculadora.borrarDisplay();
     });
-
-    // Nueva función para obtener un número trivial aleatorio
-    function getTrivia() {
-        // Limpiamos el resultado actual
-        document.getElementById("resultado").textContent = "";
-    
-        // URL de la API Numbers para obtener un número trivial aleatorio con HTTPS
-        const apiUrl = "https://cors-anywhere.herokuapp.com/http://numbersapi.com/random/trivia";
-    
-        // Realizamos la solicitud usando Fetch
-        fetch(apiUrl)
-            .then(response => {
-                // Verificamos si la solicitud fue exitosa (código de respuesta 200)
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                // Parseamos la respuesta como JSON
-                return response.json();
-            })
-            .then(data => {
-                // Mostramos el resultado en el elemento con id "resultado"
-                document.getElementById("resultado").textContent = data.text;
-            })
-            .catch(error => {
-                console.error("Error fetching trivia:", error);
-                document.getElementById("resultado").textContent = "Error al obtener el número trivial.";
-            });
-    }    
 
     miCalculadora.mostrarMemoria();
 });
