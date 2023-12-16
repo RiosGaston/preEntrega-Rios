@@ -1,38 +1,47 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Definición de la clase Calculadora
     function Calculadora() {
+        // Propiedades de la calculadora
         this.memoria = JSON.parse(localStorage.getItem('calculadora_memoria')) || [];
         this.displayValue = "";
 
+        // Método para actualizar el contenido del display en la interfaz
         this.actualizarDisplay = function () {
             document.getElementById("resultado").innerHTML = this.displayValue;
         }
 
+        // Método para agregar un valor al display
         this.agregarAlDisplay = function (valor) {
             this.displayValue += valor;
             this.actualizarDisplay();
         }
 
+        // Método para borrar el contenido del display
         this.borrarDisplay = function () {
             this.displayValue = "";
             this.actualizarDisplay();
         }
 
+        // Método para borrar el último carácter del display
         this.borrarUltimoCaracter = function () {
             this.displayValue = this.displayValue.slice(0, -1);
             this.actualizarDisplay();
         }
 
+        // Método para limpiar la memoria de resultados
         this.limpiarMemoria = function () {
             this.memoria = [];
             this.mostrarMemoria();
             this.guardarMemoriaEnLocalStorage();
         }
 
+        // Método para limpiar el contenido del display
         this.limpiarDisplay = function () {
             this.displayValue = "";
             this.actualizarDisplay();
         }
 
+        // Método para mostrar resultados en el display y guardar en la memoria
         this.resultados = function (resultado, operacion) {
             let resultadoElement = document.getElementById("resultado");
             resultadoElement.innerHTML = resultado !== undefined ? `Resultado: ${resultado}` : "Error: Debe ingresar una expresión válida";
@@ -40,6 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
             this.actualizarDisplay();
         }
 
+        // Método para mostrar la memoria en la interfaz
         this.mostrarMemoria = function () {
             let memoriaList = document.getElementById("memoriaList");
             memoriaList.innerHTML = "";
@@ -51,45 +61,54 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
+        // Método de validación de expresión (puede ser extendido)
         this.validarExpresion = function () {
             return true;
         }
 
+        // Método principal para ejecutar la calculadora
         this.ejecutarCalculadora = function (operacion) {
             if (operacion === "=") {
                 if (this.validarExpresion()) {
                     try {
                         let resultado;
+                        // Evaluación de funciones matemáticas si están presentes en la expresión
                         if (this.displayValue.includes("sin") || this.displayValue.includes("cos") || this.displayValue.includes("tan")) {
                             resultado = math.evaluate(this.displayValue);
                         } else {
                             resultado = eval(this.displayValue);
                         }
 
+                        // Almacenar el resultado en la memoria y actualizar la interfaz
                         this.memoria.push(`${this.displayValue} = ${resultado}`);
                         this.resultados(resultado, operacion);
                         this.mostrarMemoria();
                         this.guardarMemoriaEnLocalStorage();
                     } catch (error) {
+                        // Manejo de errores durante la evaluación de la expresión
                         this.borrarDisplay();
                         this.resultados(undefined, operacion);
                     }
                 } else {
+                    // Expresión no válida
                     this.resultados(undefined, operacion);
                 }
             } else {
+                // Agregar operador al display
                 this.agregarAlDisplay(` ${operacion} `);
             }
         }
 
+        // Método para guardar la memoria en el almacenamiento local del navegador
         this.guardarMemoriaEnLocalStorage = function () {
             localStorage.setItem('calculadora_memoria', JSON.stringify(this.memoria));
         }
 
+        // Método para mostrar una trivia en la interfaz
         this.mostrarTrivia = function (pregunta, respuestas) {
             const triviaContainer = document.getElementById("trivia");
             const respuestaContainer = document.getElementById("respuesta");
-            
+
             respuestaContainer.innerHTML = "";
 
             triviaContainer.innerHTML = `
@@ -99,18 +118,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 </ul>
                 <button class="btn" id="btnMostrarRespuesta">Mostrar Respuesta</button>
             `;
-            
+
+            // Agregar evento para mostrar la respuesta al hacer clic en el botón
             document.getElementById("btnMostrarRespuesta").addEventListener("click", () => {
                 this.mostrarRespuesta(respuestas);
             });
         };
 
+        // Método para mostrar la respuesta de la trivia
         this.mostrarRespuesta = function (respuestas) {
             const respuestaContainer = document.getElementById("respuesta");
             const respuestaCorrecta = respuestas[respuestas.length - 1];
             respuestaContainer.innerHTML = `Respuesta Correcta: ${respuestaCorrecta}`;
         };
 
+        // Método para obtener una trivia desde una API
         this.obtenerTrivia = function () {
             const apiUrl = "https://opentdb.com/api.php?amount=10&category=19";
 
@@ -133,12 +155,15 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
+    // Crear una instancia de la clase Calculadora
     const miCalculadora = new Calculadora();
 
+    // Agregar eventos a los botones de la calculadora
     document.querySelectorAll(".btn").forEach(function (button) {
         button.addEventListener("click", function () {
             const buttonValue = this.textContent;
 
+            // Switch para manejar diferentes acciones según el botón presionado
             switch (buttonValue) {
                 case "=":
                     miCalculadora.ejecutarCalculadora("=");
@@ -172,6 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("keydown", function (event) {
         const key = event.key;
 
+        // Switch para manejar diferentes acciones según la tecla presionada
         switch (key) {
             case "Enter":
                 miCalculadora.ejecutarCalculadora("=");
@@ -206,10 +232,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Agregar evento para limpiar la memoria al hacer clic en un botón específico
     document.getElementById("btnLimpiarMemoria").addEventListener("click", function () {
         miCalculadora.limpiarMemoria();
         miCalculadora.borrarDisplay();
     });
 
+    // Mostrar la memoria al cargar la página
     miCalculadora.mostrarMemoria();
 });
